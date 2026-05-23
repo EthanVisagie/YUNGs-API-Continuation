@@ -16,10 +16,7 @@ public class IncreaseStructureWeightLimitMixinFabric {
      * @return - The higher weight that is a more reasonable limit.
      */
     @WrapOperation(
-            method = {
-                    "m_dgkaflam",
-                    "method_28886"
-            },
+            method = "method_28886",
             at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/Codec;intRange(II)Lcom/mojang/serialization/Codec;"),
             remap = false,
             require = 0

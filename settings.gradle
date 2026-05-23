@@ -56,4 +56,4 @@ plugins {
 }
 
 rootProject.name = 'yungsapi'
-include("Common", "NeoForge")
+include("Common", "Fabric", "NeoForge")

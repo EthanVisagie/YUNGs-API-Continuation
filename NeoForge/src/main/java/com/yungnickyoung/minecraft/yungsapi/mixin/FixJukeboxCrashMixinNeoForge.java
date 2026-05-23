@@ -1,7 +1,6 @@
 package com.yungnickyoung.minecraft.yungsapi.mixin;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
@@ -11,22 +10,20 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * Fixes a crash that occurs when a jukebox is overwritten during worldgen.
- */
 @SuppressWarnings({"MixinAnnotationTarget", "UnresolvedMixinReference"})
 @Mixin(JukeboxBlockEntity.class)
-public abstract class FixJukeboxCrashMixin extends BlockEntity {
-    public FixJukeboxCrashMixin(BlockEntityType<?> $$0, BlockPos $$1, BlockState $$2) {
+public abstract class FixJukeboxCrashMixinNeoForge extends BlockEntity {
+    public FixJukeboxCrashMixinNeoForge(BlockEntityType<?> $$0, BlockPos $$1, BlockState $$2) {
         super($$0, $$1, $$2);
     }
 
-    @Inject(method = "setTheItem",
+    @Inject(method = "itemChanged",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/Level;registryAccess()Lnet/minecraft/core/RegistryAccess;"),
             cancellable = true,
+            remap = false,
             require = 0)
-    public void yungsapi_checkIfLevelNull(ItemStack itemStack, CallbackInfo ci) {
+    public void yungsapi_checkIfLevelNullForNeo(CallbackInfo ci) {
         if (this.level == null) {
             ci.cancel();
         }

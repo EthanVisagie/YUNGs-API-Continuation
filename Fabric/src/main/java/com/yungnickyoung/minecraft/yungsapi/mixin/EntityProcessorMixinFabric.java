@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -100,9 +102,11 @@ public class EntityProcessorMixinFabric {
                 entityNbt.put("Pos", listTag);
                 entityNbt.remove("UUID");
                 tryCreateEntity(serverLevelAccessor, entityNbt).ifPresent((entity) -> {
-                    float f = entity.mirror(ctx.structurePlaceSettings().getMirror());
-                    f += entity.getYRot() - entity.rotate(ctx.structurePlaceSettings().getRotation());
-                    entity.moveTo(entityPos.x, entityPos.y, entityPos.z, f, entity.getXRot());
+                    float f = entity.rotate(ctx.structurePlaceSettings().getRotation());
+                    f += entity.mirror(ctx.structurePlaceSettings().getMirror()) - entity.getYRot();
+                    entity.snapTo(entityPos.x, entityPos.y, entityPos.z, f, entity.getXRot());
+                    entity.setYBodyRot(f);
+                    entity.setYHeadRot(f);
                     if (ctx.structurePlaceSettings().shouldFinalizeEntities() && entity instanceof Mob) {
                         ((Mob) entity).finalizeSpawn(serverLevelAccessor, serverLevelAccessor.getCurrentDifficultyAt(BlockPos.containing(entityPos)), EntitySpawnReason.STRUCTURE, null);
                     }
@@ -173,7 +177,10 @@ public class EntityProcessorMixinFabric {
     @Unique
     private static Optional<Entity> tryCreateEntity(ServerLevelAccessor serverLevelAccessor, CompoundTag compoundTag) {
         try {
-            return EntityType.create(compoundTag, serverLevelAccessor.getLevel(), EntitySpawnReason.STRUCTURE);
+            return EntityType.create(
+                    TagValueInput.create(ProblemReporter.DISCARDING, serverLevelAccessor.registryAccess(), compoundTag),
+                    serverLevelAccessor.getLevel(),
+                    EntitySpawnReason.STRUCTURE);
         } catch (Exception exception) {
             return Optional.empty();
         }
