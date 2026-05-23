@@ -10,18 +10,17 @@ import com.yungnickyoung.minecraft.yungsapi.world.structure.context.StructureCon
 import com.yungnickyoung.minecraft.yungsapi.world.structure.jigsaw.JigsawManager;
 import com.yungnickyoung.minecraft.yungsapi.world.structure.jigsaw.PieceEntry;
 import com.yungnickyoung.minecraft.yungsapi.world.structure.jigsaw.element.IMaxCountJigsawPoolElement;
-import com.yungnickyoung.minecraft.yungsapi.world.structure.jigsaw.element.YungJigsawPoolElement;
 import com.yungnickyoung.minecraft.yungsapi.world.structure.jigsaw.element.YungJigsawSinglePoolElement;
+import com.yungnickyoung.minecraft.yungsapi.world.structure.jigsaw.element.YungJigsawPoolElement;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.BiomeSource;
@@ -33,14 +32,24 @@ import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
-import net.minecraft.world.level.levelgen.structure.pools.*;
+import net.minecraft.world.level.levelgen.structure.pools.DimensionPadding;
+import net.minecraft.world.level.levelgen.structure.pools.EmptyPoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.JigsawJunction;
+import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
+import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.phys.AABB;
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Class responsible for assembling a YUNG Jigsaw structure.
@@ -150,13 +159,13 @@ public class JigsawStructureAssembler {
             // Fetch the target pool, ensuring it's not empty
             Optional<? extends Holder<StructureTemplatePool>> optionalPoolHolder = this.settings.poolRegistry.get(poolKey);
             if (optionalPoolHolder.isEmpty()) {
-                YungsApiCommon.LOGGER.warn("Empty or nonexistent pool: {}", poolKey.location());
+                YungsApiCommon.LOGGER.warn("Empty or nonexistent pool: {}", poolKey.identifier());
                 continue;
             }
             Holder<StructureTemplatePool> targetPoolHolder = optionalPoolHolder.get();
             StructureTemplatePool targetPool = targetPoolHolder.value();
             if (targetPool.size() == 0 && !targetPoolHolder.is(Pools.EMPTY)) {
-                YungsApiCommon.LOGGER.warn("Empty or nonexistent pool: {}", poolKey.location());
+                YungsApiCommon.LOGGER.warn("Empty or nonexistent pool: {}", poolKey.identifier());
                 continue;
             }
 
@@ -165,7 +174,7 @@ public class JigsawStructureAssembler {
             StructureTemplatePool fallbackPool = fallbackPoolHolder.value();
             if (fallbackPool.size() == 0 && !fallbackPoolHolder.is(Pools.EMPTY)) {
                 YungsApiCommon.LOGGER.warn("Empty or nonexistent fallback pool: {}", fallbackPoolHolder.unwrapKey()
-                        .map(key -> key.location().toString())
+                        .map(key -> key.identifier().toString())
                         .orElse("<unregistered>"));
                 continue;
             }
@@ -198,7 +207,7 @@ public class JigsawStructureAssembler {
          */
         if (pieceEntry.getDeadendPool().isPresent() && !generatedAtLeastOneChildPiece && pieceJigsawBlocks.size() > 1) {
             // Get deadend pool from id
-            ResourceLocation deadendPoolId = pieceEntry.getDeadendPool().get();
+            Identifier deadendPoolId = pieceEntry.getDeadendPool().get();
             Optional<StructureTemplatePool> deadendPool = this.settings.poolRegistry.getOptional(deadendPoolId);
             if (deadendPool.isEmpty()) {
                 YungsApiCommon.LOGGER.error("Unable to find deadend pool {} for element {}", deadendPoolId, piece.getElement());

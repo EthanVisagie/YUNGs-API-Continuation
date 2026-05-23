@@ -10,7 +10,7 @@ import com.yungnickyoung.minecraft.yungsapi.world.structure.terrainadaptation.ad
 import com.yungnickyoung.minecraft.yungsapi.world.structure.terrainadaptation.adaptations.EnhancedTerrainAdaptationType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.IntProvider;
@@ -38,7 +38,7 @@ public class YungJigsawStructure extends Structure {
                     .group(
                             settingsCodec(builder),
                             StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
-                            ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
+                            Identifier.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
                             Codec.intRange(0, 128).fieldOf("size").forGetter(structure -> structure.maxDepth),
                             HeightProvider.CODEC.fieldOf("start_height").forGetter(structure -> structure.startHeight),
                             IntProvider.codec(0, 15).optionalFieldOf("x_offset_in_chunk", ConstantInt.of(0)).forGetter(structure -> structure.xOffsetInChunk),
@@ -64,7 +64,7 @@ public class YungJigsawStructure extends Structure {
      * If specified, the position of a matching jigsaw block will be used as the structure's starting position
      * when generating the structure. This will become the target position of the /locate command.
      */
-    private final Optional<ResourceLocation> startJigsawName;
+    private final Optional<Identifier> startJigsawName;
 
     /**
      * The max depth, in Jigsaw pieces, the structure can generate before stopping.
@@ -148,7 +148,7 @@ public class YungJigsawStructure extends Structure {
     public YungJigsawStructure(
             StructureSettings structureSettings,
             Holder<StructureTemplatePool> startPool,
-            Optional<ResourceLocation> startJigsawName,
+            Optional<Identifier> startJigsawName,
             int maxDepth,
             HeightProvider startHeight,
             IntProvider xOffsetInChunk,

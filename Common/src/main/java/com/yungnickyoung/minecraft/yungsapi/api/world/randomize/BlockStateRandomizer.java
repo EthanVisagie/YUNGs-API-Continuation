@@ -3,10 +3,10 @@ package com.yungnickyoung.minecraft.yungsapi.api.world.randomize;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.yungnickyoung.minecraft.yungsapi.YungsApiCommon;
+import com.yungnickyoung.minecraft.yungsapi.world.structure.context.StructureContext;
 import com.yungnickyoung.minecraft.yungsapi.world.structure.condition.StructureCondition;
 import com.yungnickyoung.minecraft.yungsapi.world.structure.condition.StructureConditionType;
-import com.yungnickyoung.minecraft.yungsapi.world.structure.context.StructureContext;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.RandomSource;
@@ -80,7 +80,6 @@ public class BlockStateRandomizer {
             this.addBlock(blockState, chance);
         });
     }
-
 
     /**
      * Constructs a new BlockStateRandomizer from a Map of BlockStates to their corresponding probabilities.

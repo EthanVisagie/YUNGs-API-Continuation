@@ -32,7 +32,8 @@ public abstract class FixJukeboxCrashMixin extends BlockEntity {
         }
     }
 
-    // NeoForge has split the setTheItem method into itemChanged and setTheItem. In NeoForge, we need to inject into itemChanged.
+    // NeoForge has split the setTheItem method into itemChanged and setTheItem.
+    // In NeoForge, we need to inject into itemChanged.
     @Inject(method = "itemChanged",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/Level;registryAccess()Lnet/minecraft/core/RegistryAccess;"),

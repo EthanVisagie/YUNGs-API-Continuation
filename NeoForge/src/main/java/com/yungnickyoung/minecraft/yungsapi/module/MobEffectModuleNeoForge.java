@@ -21,15 +21,15 @@ public class MobEffectModuleNeoForge {
                 AutoRegistrationManager.MOB_EFFECTS,
                 MobEffectModuleNeoForge::buildMobEffect,
                 MobEffectModuleNeoForge::registerMobEffect)
-        );    }
+        );
+    }
 
     private static MobEffect buildMobEffect(AutoRegisterField data) {
         return ((AutoRegisterMobEffect) data.object()).get();
     }
 
     private static void registerMobEffect(AutoRegisterField data, MobEffect mobEffect, RegisterEvent.RegisterHelper<MobEffect> helper) {
-        // We directly reference the registry instead of using the helper so we can set the holder on the AutoRegisterMobEffect instance.
-        // At the time of writing, the helper does not provide a way to get the holder after registration.
+        // Direct registry call lets us retain the Holder for APIs that need it later.
         Holder<MobEffect> holder = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, data.name(), mobEffect);
         ((AutoRegisterMobEffect) data.object()).setHolder(holder);
     }

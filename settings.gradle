@@ -2,7 +2,18 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        maven { url "https://maven.fabricmc.net/" }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Fabric'
+                    url = uri("https://maven.fabricmc.net")
+                }
+            }
+            filter {
+                includeGroupAndSubgroups("net.fabricmc")
+                includeGroup("fabric-loom")
+            }
+        }
         exclusiveContent {
             forRepository {
                 maven {
@@ -45,4 +56,4 @@ plugins {
 }
 
 rootProject.name = 'yungsapi'
-include("Common", "Fabric", "NeoForge")
+include("Common", "NeoForge")

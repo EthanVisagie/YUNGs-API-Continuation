@@ -16,20 +16,34 @@ import java.util.function.Supplier;
  * {@code
  * @AutoRegister("frost")
  * public static final AutoRegisterPotion FROST_POTION = AutoRegisterPotion
- *        .mobEffect(() -> new MobEffectInstance(MobEffectModule.FROZEN_EFFECT.get(), 0, 0, false, true, false));
+ *        .of(() -> new Potion(new MobEffectInstance(MobEffectModule.FROZEN_EFFECT.getHolder(), 0, 0, false, true, false)));
  * }
  * </pre>
  */
 public class AutoRegisterPotion extends AutoRegisterEntry<Potion> {
+    private Holder<Potion> holder;
+
     public static AutoRegisterPotion of(Supplier<Potion> potionSupplier) {
         return new AutoRegisterPotion(potionSupplier);
+    }
+
+    /**
+     * Compatibility helper for older YUNG's API call sites that supplied only an effect instance.
+     */
+    public static AutoRegisterPotion mobEffect(MobEffectInstance mobEffectInstance) {
+        return mobEffect(() -> mobEffectInstance);
+    }
+
+    /**
+     * Compatibility helper for lazy effect construction.
+     */
+    public static AutoRegisterPotion mobEffect(Supplier<MobEffectInstance> mobEffectSupplier) {
+        return new AutoRegisterPotion(() -> new Potion("", mobEffectSupplier.get()));
     }
 
     private AutoRegisterPotion(Supplier<Potion> potionSupplier) {
         super(potionSupplier);
     }
-
-    private Holder<Potion> holder;
 
     public Holder<Potion> getHolder() {
         if (holder == null) {

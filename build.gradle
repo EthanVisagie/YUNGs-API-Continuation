@@ -1,6 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.13.6' apply false
-    id "org.jetbrains.gradle.plugin.idea-ext" version "1.1.7" // required for VanillaGradle and NeoForge to work together?
+    id "org.jetbrains.gradle.plugin.idea-ext" version "1.4.1" // required for VanillaGradle and NeoForge to work together?
     id 'org.spongepowered.mixin' version '0.7-SNAPSHOT' apply false
     id 'net.darkhax.curseforgegradle' version "${cursegradle_version}" apply false // curseforge publishing
     id "com.modrinth.minotaur" version "2.+" apply false // modrinth publishing
@@ -20,9 +19,16 @@ subprojects {
     }
 }
 
-task publishCurseForge(dependsOn: [':Fabric:publishCurseForgeFabric', ':NeoForge:publishCurseForgeNeoForge']) {
+def curseForgePublishTasks = [':NeoForge:publishCurseForgeNeoForge']
+def modrinthPublishTasks = [':NeoForge:modrinth']
+if (findProject(':Fabric') != null) {
+    curseForgePublishTasks << ':Fabric:publishCurseForgeFabric'
+    modrinthPublishTasks << ':Fabric:modrinth'
 }
-task publishModrinth(dependsOn: [':Fabric:modrinth', ':NeoForge:modrinth']) {
+
+task publishCurseForge(dependsOn: curseForgePublishTasks) {
+}
+task publishModrinth(dependsOn: modrinthPublishTasks) {
 }
 task publishCurseAndModrinth(dependsOn: ['publishCurseForge', 'publishModrinth']) {
 }

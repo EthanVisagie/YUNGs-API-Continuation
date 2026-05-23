@@ -41,7 +41,6 @@ public class PotionModuleNeoForge {
                 PotionModuleNeoForge::buildPotion,
                 PotionModuleNeoForge::registerPotion)
         );
-
         NeoForge.EVENT_BUS.addListener(PotionModuleNeoForge::registerBrewingRecipes);
     }
 
@@ -49,7 +48,7 @@ public class PotionModuleNeoForge {
         AutoRegisterPotion autoRegisterPotion = (AutoRegisterPotion) data.object();
         Potion potion = autoRegisterPotion.get();
 
-        // If the potion does not have a name, set it based on the annotation data
+        // If the potion does not have a name, set it based on the annotation data.
         if (((PotionAccessor) potion).getName() == null) {
             String name = data.name().getNamespace() + "." + data.name().getPath();
             ((PotionAccessor) potion).setName(name);
@@ -59,8 +58,7 @@ public class PotionModuleNeoForge {
     }
 
     private static void registerPotion(AutoRegisterField data, Potion potion, RegisterEvent.RegisterHelper<Potion> helper) {
-        // We directly reference the registry instead of using the helper so we can set the holder on the AutoRegisterPotion instance.
-        // At the time of writing, the helper does not provide a way to get the holder after registration.
+        // Direct registry call lets us retain the Holder for brewing recipes.
         Holder<Potion> holder = Registry.registerForHolder(BuiltInRegistries.POTION, data.name(), potion);
         ((AutoRegisterPotion) data.object()).setHolder(holder);
     }
@@ -92,7 +90,7 @@ public class PotionModuleNeoForge {
         @ParametersAreNonnullByDefault
         public @NotNull ItemStack getOutput(ItemStack inputStack, ItemStack ingredientStack) {
             return isInput(inputStack) && isIngredient(ingredientStack)
-                    ? PotionContents.createItemStack(inputStack.getItem(), (this.output))
+                    ? PotionContents.createItemStack(inputStack.getItem(), this.output)
                     : ItemStack.EMPTY;
         }
     }

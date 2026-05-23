@@ -6,6 +6,8 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "yungsapi.refmap.json",
   "mixins": [
+    "AutoRegisterBlockIdMixin",
+    "AutoRegisterItemIdMixin",
     "BeardifierMixin",
     "FixJukeboxCrashMixin",
     "NoBasaltColumnsInStructuresMixin",
@@ -14,11 +16,13 @@
     "NoMagmaInStructuresMixin",
     "NoVinesInStructuresMixin",
     "accessor.BeardifierAccessor",
+    "accessor.CreativeModeTabAccessor",
+    "accessor.CreativeModeTabBuilderAccessor",
+    "accessor.PotionAccessor",
     "accessor.BoundingBoxAccessor",
     "accessor.FeaturePoolElementAccessor",
     "accessor.ListPoolElementAccessor",
     "accessor.NoiseChunkAccessor",
-    "accessor.PotionAccessor",
     "accessor.SinglePoolElementAccessor",
     "accessor.StructureTemplatePoolAccessor"
   ],

@@ -1,15 +1,20 @@
 package com.yungnickyoung.minecraft.yungsapi.module;
 
 import com.yungnickyoung.minecraft.yungsapi.api.autoregister.AutoRegisterBlock;
-import com.yungnickyoung.minecraft.yungsapi.autoregister.AutoRegisterField;
 import com.yungnickyoung.minecraft.yungsapi.autoregister.AutoRegistrationManager;
+import com.yungnickyoung.minecraft.yungsapi.autoregister.AutoRegisterCreationContext;
+import com.yungnickyoung.minecraft.yungsapi.autoregister.AutoRegisterField;
 import com.yungnickyoung.minecraft.yungsapi.mixin.accessor.StairBlockAccessor;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 
@@ -25,7 +30,7 @@ public class BlockModuleFabric {
 
     private static void register(AutoRegisterField data) {
         AutoRegisterBlock autoRegisterBlock = (AutoRegisterBlock) data.object();
-        Block block = autoRegisterBlock.get();
+        Block block = AutoRegisterCreationContext.withBlockId(data.name(), autoRegisterBlock::get);
 
         // Register block
         Registry.register(BuiltInRegistries.BLOCK, data.name(), block);
@@ -40,7 +45,7 @@ public class BlockModuleFabric {
 
         // Register associated Blocks & their BlockItems, if applicable
         if (autoRegisterBlock.hasStairs()) {
-            ResourceLocation name = ResourceLocation.fromNamespaceAndPath(namespace, path + "_stairs");
+            Identifier name = Identifier.fromNamespaceAndPath(namespace, path + "_stairs");
             BlockBehaviour.Properties props = BlockBehaviour.Properties.ofLegacyCopy(block);
             props.setId(ResourceKey.create(Registries.BLOCK, name));
             Block stairBlock = StairBlockAccessor.createStairBlock(block.defaultBlockState(), props);
@@ -51,7 +56,7 @@ public class BlockModuleFabric {
             }
         }
         if (autoRegisterBlock.hasSlab()) {
-            ResourceLocation name = ResourceLocation.fromNamespaceAndPath(namespace, path + "_slab");
+            Identifier name = Identifier.fromNamespaceAndPath(namespace, path + "_slab");
             BlockBehaviour.Properties props = BlockBehaviour.Properties.ofLegacyCopy(block);
             props.setId(ResourceKey.create(Registries.BLOCK, name));
             Block slabBlock = new SlabBlock(props);
@@ -62,7 +67,7 @@ public class BlockModuleFabric {
             }
         }
         if (autoRegisterBlock.hasFence()) {
-            ResourceLocation name = ResourceLocation.fromNamespaceAndPath(namespace, path + "_fence");
+            Identifier name = Identifier.fromNamespaceAndPath(namespace, path + "_fence");
             BlockBehaviour.Properties props = BlockBehaviour.Properties.ofLegacyCopy(block);
             props.setId(ResourceKey.create(Registries.BLOCK, name));
             Block fenceBlock = new FenceBlock(props);
@@ -73,7 +78,7 @@ public class BlockModuleFabric {
             }
         }
         if (autoRegisterBlock.hasFenceGate()) {
-            ResourceLocation name = ResourceLocation.fromNamespaceAndPath(namespace, path + "_fence_gate");
+            Identifier name = Identifier.fromNamespaceAndPath(namespace, path + "_fence_gate");
             BlockBehaviour.Properties props = BlockBehaviour.Properties.ofLegacyCopy(block);
             props.setId(ResourceKey.create(Registries.BLOCK, name));
             Block fenceGateBlock = new FenceGateBlock(autoRegisterBlock.getFenceGateWoodType(), props);
@@ -84,7 +89,7 @@ public class BlockModuleFabric {
             }
         }
         if (autoRegisterBlock.hasWall()) {
-            ResourceLocation name = ResourceLocation.fromNamespaceAndPath(namespace, path + "_wall");
+            Identifier name = Identifier.fromNamespaceAndPath(namespace, path + "_wall");
             BlockBehaviour.Properties props = BlockBehaviour.Properties.ofLegacyCopy(block);
             props.setId(ResourceKey.create(Registries.BLOCK, name));
             Block wallBlock = new WallBlock(props);

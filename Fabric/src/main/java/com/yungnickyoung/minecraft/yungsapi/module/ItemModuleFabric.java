@@ -2,12 +2,13 @@ package com.yungnickyoung.minecraft.yungsapi.module;
 
 import com.yungnickyoung.minecraft.yungsapi.api.autoregister.AutoRegisterItem;
 import com.yungnickyoung.minecraft.yungsapi.autoregister.AutoRegistrationManager;
+import com.yungnickyoung.minecraft.yungsapi.autoregister.AutoRegisterCreationContext;
 import com.yungnickyoung.minecraft.yungsapi.autoregister.AutoRegisterField;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -26,15 +27,15 @@ public class ItemModuleFabric {
 
     private static void register(AutoRegisterField data) {
         AutoRegisterItem autoRegisterItem = (AutoRegisterItem) data.object();
-        Item item = autoRegisterItem.get();
+        Item item = AutoRegisterCreationContext.withItemId(data.name(), autoRegisterItem::get);
 
         // Register item
         Registry.register(BuiltInRegistries.ITEM, data.name(), item);
         data.markProcessed();
     }
 
-    public static void registerBlockItem(ResourceLocation resourceLocation, Block block, Item.Properties itemProperties) {
-        itemProperties.setId(ResourceKey.create(Registries.ITEM, resourceLocation));
-        Registry.register(BuiltInRegistries.ITEM, resourceLocation, new BlockItem(block, itemProperties));
+    public static void registerBlockItem(Identifier identifier, Block block, Item.Properties itemProperties) {
+        itemProperties.setId(ResourceKey.create(Registries.ITEM, identifier));
+        Registry.register(BuiltInRegistries.ITEM, identifier, new BlockItem(block, itemProperties));
     }
 }

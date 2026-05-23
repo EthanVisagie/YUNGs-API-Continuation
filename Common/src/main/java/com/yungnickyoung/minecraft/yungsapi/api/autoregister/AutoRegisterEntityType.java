@@ -2,11 +2,10 @@ package com.yungnickyoung.minecraft.yungsapi.api.autoregister;
 
 import com.google.common.collect.ImmutableSet;
 import com.yungnickyoung.minecraft.yungsapi.autoregister.AutoRegisterEntry;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.DependantName;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityAttachment;
 import net.minecraft.world.entity.EntityAttachments;
@@ -79,8 +78,8 @@ public class AutoRegisterEntityType<T extends Entity> extends AutoRegisterEntry<
         private boolean canSpawnFarFromPlayer;
         private int clientTrackingRange = 5;
         private int updateInterval = 3;
-        private EntityDimensions dimensions = EntityDimensions.scalable(0.6F, 1.8F);
         private float spawnDimensionsScale = 1.0F;
+        private EntityDimensions dimensions = EntityDimensions.scalable(0.6F, 1.8F);
         private EntityAttachments.Builder attachments = EntityAttachments.builder();
         private FeatureFlagSet requiredFeatures = FeatureFlags.VANILLA_SET;
         private DependantName<EntityType<?>, String> descriptionId;
@@ -93,8 +92,8 @@ public class AutoRegisterEntityType<T extends Entity> extends AutoRegisterEntry<
             this.canSpawnFarFromPlayer = mobCategory == MobCategory.CREATURE || mobCategory == MobCategory.MISC;
             this.lootTable = resourceKey -> Optional.of(ResourceKey.create(
                     Registries.LOOT_TABLE,
-                    resourceKey.location().withPrefix("entities/")));
-            this.descriptionId = resourceKey -> Util.makeDescriptionId("entity", resourceKey.location());
+                    resourceKey.identifier().withPrefix("entities/")));
+            this.descriptionId = resourceKey -> Util.makeDescriptionId("entity", resourceKey.identifier());
             this.allowedInPeaceful = true;
         }
 
@@ -121,7 +120,6 @@ public class AutoRegisterEntityType<T extends Entity> extends AutoRegisterEntry<
             for (float attachment : attachments) {
                 this.attachments = this.attachments.attach(EntityAttachment.PASSENGER, 0.0F, attachment, 0.0F);
             }
-
             return this;
         }
 
@@ -129,7 +127,6 @@ public class AutoRegisterEntityType<T extends Entity> extends AutoRegisterEntry<
             for (Vec3 attachment : attachments) {
                 this.attachments = this.attachments.attach(EntityAttachment.PASSENGER, attachment);
             }
-
             return this;
         }
 

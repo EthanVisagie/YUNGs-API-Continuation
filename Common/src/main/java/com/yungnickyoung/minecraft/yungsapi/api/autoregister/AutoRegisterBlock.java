@@ -70,7 +70,7 @@ public class AutoRegisterBlock extends AutoRegisterEntry<Block> {
 
     /**
      * Indicates that this block will also have a corresponding stairs block registered.
-     * The ResourceLocation for the stairs block will be the same as the original block, but with "_stairs" appended.
+     * The Identifier for the stairs block will be the same as the original block, but with "_stairs" appended.
      */
     public AutoRegisterBlock withStairs() {
         this.hasStairs = true;
@@ -79,7 +79,7 @@ public class AutoRegisterBlock extends AutoRegisterEntry<Block> {
 
     /**
      * Indicates that this block will also have a corresponding slab block registered.
-     * The ResourceLocation for the slab block will be the same as the original block, but with "_slab" appended.
+     * The Identifier for the slab block will be the same as the original block, but with "_slab" appended.
      */
     public AutoRegisterBlock withSlab() {
         this.hasSlab = true;
@@ -88,7 +88,7 @@ public class AutoRegisterBlock extends AutoRegisterEntry<Block> {
 
     /**
      * Indicates that this block will also have a corresponding fence block registered.
-     * The ResourceLocation for the fence block will be the same as the original block, but with "_fence" appended.
+     * The Identifier for the fence block will be the same as the original block, but with "_fence" appended.
      */
     public AutoRegisterBlock withFence() {
         this.hasFence = true;
@@ -97,7 +97,7 @@ public class AutoRegisterBlock extends AutoRegisterEntry<Block> {
 
     /**
      * Indicates that this block will also have a corresponding fence gate block registered.
-     * The ResourceLocation for the fence gate block will be the same as the original block, but with "_fence_gate" appended.
+     * The Identifier for the fence gate block will be the same as the original block, but with "_fence_gate" appended.
      * @param woodType the {@link WoodType} for the fence gate. This determines the sound played when the fence gate is opened/closed.
      */
     public AutoRegisterBlock withFenceGate(WoodType woodType) {
@@ -148,7 +148,7 @@ public class AutoRegisterBlock extends AutoRegisterEntry<Block> {
 
     /**
      * Indicates that this block will also have a corresponding wall block registered.
-     * The ResourceLocation for the wall block will be the same as the original block, but with "_wall" appended.
+     * The Identifier for the wall block will be the same as the original block, but with "_wall" appended.
      */
     public AutoRegisterBlock withWall() {
         this.hasWall = true;

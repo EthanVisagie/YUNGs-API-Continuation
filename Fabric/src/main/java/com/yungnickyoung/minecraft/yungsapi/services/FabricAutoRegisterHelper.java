@@ -8,7 +8,7 @@ import com.yungnickyoung.minecraft.yungsapi.module.*;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
 import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.Potion;
 import org.reflections.Reflections;
@@ -48,7 +48,7 @@ public class FabricAutoRegisterHelper implements IAutoRegisterHelper {
                             // Impossible?
                             throw new RuntimeException(e);
                         }
-                        ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(modId, name);
+                        Identifier resourceLocation = Identifier.fromNamespaceAndPath(modId, name);
                         AutoRegisterField autoRegisterField = new AutoRegisterField(o, resourceLocation);
                         AutoRegisterFieldRouter.queueField(autoRegisterField);
                     });
