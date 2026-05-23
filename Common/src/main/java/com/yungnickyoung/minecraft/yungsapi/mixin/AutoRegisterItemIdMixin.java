@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Item.class)
 public abstract class AutoRegisterItemIdMixin {
     @Inject(method = "<init>", at = @At("HEAD"))
-    private void yungsapi_applyAutoRegisterItemId(Item.Properties properties, CallbackInfo ci) {
+    private static void yungsapi_applyAutoRegisterItemId(Item.Properties properties, CallbackInfo ci) {
         ResourceKey<Item> key = AutoRegisterCreationContext.currentItemKey();
         if (key != null) {
             properties.setId(key);
